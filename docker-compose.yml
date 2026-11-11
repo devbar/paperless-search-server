@@ -1,0 +1,23 @@
+services:
+  paperless-search-mcp:
+    build: .
+    image: paperless-search-mcp:latest
+    container_name: paperless-search-mcp
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file: .env  # must contain MCP_API_KEY — the server refuses to start without it
+    # Linux hosts: if the mounted index file is owned by another UID
+    # (e.g. 1000), run the container with that UID or rebuild the image
+    # with matching APP_UID (see README → File permissions):
+    # user: "1000:1000"
+    volumes:
+      # Mount the directory (not the single file) read-only: the mapping
+      # then survives the indexer replacing the file atomically.
+      # Windows example:
+      - "D:/path/to/index:/data:ro"
+      # Linux example:
+      # - "/var/lib/paperless/index:/data:ro"
+    # Required on Linux so host.docker.internal resolves:
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"

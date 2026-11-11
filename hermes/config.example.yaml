@@ -1,0 +1,22 @@
+# Hermes connection schema for paperless-search-mcp.
+#
+# Copy this block into the `mcp_servers` section of the Hermes config
+# (hermes config path → typically C:\Users\<user>\AppData\Local\hermes\config.yaml)
+# and replace <MCP_API_KEY> with the server's key (see .env / MCP_API_KEY).
+
+mcp_servers:
+  paperless:
+    url: http://paperless-search-mcp.example.internal/mcp   # adjust to your host
+    timeout: 120
+    headers:
+      Authorization: Bearer <MCP_API_KEY>
+
+# Equivalent via the Hermes CLI (does the same, secrets stay masked):
+#   hermes config set mcp_servers.paperless.url "http://paperless-search-mcp.example.internal/mcp" --force
+#   hermes config set mcp_servers.paperless.timeout 120 --force
+#   hermes config set mcp_servers.paperless.headers.Authorization "Bearer <MCP_API_KEY>" --force
+#
+# Afterwards restart Hermes (or reconnect the MCP server) and verify: the three
+# tools mcp__paperless__paperless_search / _document / _index_stats should be
+# available, and mcp__paperless__paperless_index_stats must return the live
+# chunk/document counts of the shared index.
